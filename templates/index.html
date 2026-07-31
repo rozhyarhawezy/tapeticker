@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TAPE — Ticker Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ============ HEADER ============ -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-name">TAPE</span>
+        <span class="brand-sub">/ ticker dashboard</span>
+      </div>
+
+      <form class="lookup" id="lookupForm" autocomplete="off">
+        <div class="field field-symbol">
+          <label for="symbol">Symbol</label>
+          <input type="text" id="symbol" name="symbol" placeholder="AAPL" maxlength="12" required />
+        </div>
+        <div class="field">
+          <label for="start">From</label>
+          <input type="date" id="start" name="start" />
+        </div>
+        <div class="field">
+          <label for="end">To</label>
+          <input type="date" id="end" name="end" />
+        </div>
+        <button type="submit" class="btn-load" id="loadBtn">
+          <span class="btn-label">Load</span>
+        </button>
+      </form>
+    </header>
+
+    <!-- ============ TAPE STRIP (signature element) ============ -->
+    <div class="tape-strip" id="tapeStrip" hidden>
+      <div class="tape-strip-inner">
+        <span class="tape-name" id="tapeName">—</span>
+        <span class="tape-price" id="tapePrice">0.00</span>
+        <span class="tape-delta" id="tapeDelta">+0.00 (0.00%)</span>
+        <span class="tape-meta" id="tapeMeta"></span>
+      </div>
+    </div>
+
+    <!-- ============ STATUS / EMPTY / ERROR ============ -->
+    <div class="status-area" id="statusArea">
+      <div class="empty-state" id="emptyState">
+        <p class="empty-title">No symbol loaded yet</p>
+        <p class="empty-copy">Type a ticker — like AAPL, MSFT, or TSLA — pick a date range, and hit Load.</p>
+      </div>
+      <div class="loading-state" id="loadingState" hidden>
+        <div class="pulse-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <p>Pulling the tape…</p>
+      </div>
+      <div class="error-state" id="errorState" hidden>
+        <p class="error-title">Couldn't load that</p>
+        <p class="error-copy" id="errorCopy"></p>
+      </div>
+    </div>
+
+    <!-- ============ MAIN LAYOUT ============ -->
+    <main class="layout" id="mainLayout" hidden>
+
+      <!-- ----- MAIN COLUMN: OHLCV ----- -->
+      <section class="col-main">
+        <div class="card chart-card">
+          <div class="card-head">
+            <h2>Price history <span class="card-head-sub" id="chartRange"></span></h2>
+            <div class="ohlc-readout" id="ohlcReadout">
+              <span>O <b id="rOpen">–</b></span>
+              <span>H <b id="rHigh">–</b></span>
+              <span>L <b id="rLow">–</b></span>
+              <span>C <b id="rClose">–</b></span>
+              <span>V <b id="rVol">–</b></span>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="priceChart"></canvas>
+            <div class="chart-tooltip" id="chartTooltip" hidden></div>
+          </div>
+        </div>
+
+        <div class="card table-card">
+          <button class="card-toggle" id="tableToggle" aria-expanded="false">
+            <h2>Daily OHLCV</h2>
+            <span class="toggle-icon" id="toggleIcon">＋</span>
+          </button>
+          <div class="table-scroll" id="tableScroll" hidden>
+            <table class="ohlcv-table" id="ohlcvTable">
+              <thead>
+                <tr><th>Date</th><th>Open</th><th>High</th><th>Low</th><th>Close</th><th>Volume</th></tr>
+              </thead>
+              <tbody id="ohlcvBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ----- SIDE COLUMN: fast_info + info ----- -->
+      <aside class="col-side">
+
+        <div class="card snapshot-card">
+          <div class="card-head"><h2>Snapshot</h2></div>
+          <dl class="stat-grid" id="fastInfoGrid">
+            <div class="stat"><dt>Last price</dt><dd id="fiLast">–</dd></div>
+            <div class="stat"><dt>Open</dt><dd id="fiOpen">–</dd></div>
+            <div class="stat"><dt>Day high</dt><dd id="fiHigh">–</dd></div>
+            <div class="stat"><dt>Day low</dt><dd id="fiLow">–</dd></div>
+            <div class="stat"><dt>Prev close</dt><dd id="fiPrevClose">–</dd></div>
+            <div class="stat"><dt>Volume</dt><dd id="fiVolume">–</dd></div>
+            <div class="stat stat-wide"><dt>Market cap</dt><dd id="fiMarketCap">–</dd></div>
+          </dl>
+        </div>
+
+        <div class="card company-card">
+          <div class="card-head"><h2>Company</h2></div>
+          <div class="company-body">
+            <p class="company-name" id="coName">–</p>
+            <div class="company-tags" id="coTags"></div>
+            <dl class="company-facts">
+              <div><dt>Country</dt><dd id="coCountry">–</dd></div>
+              <div><dt>Employees</dt><dd id="coEmployees">–</dd></div>
+              <div><dt>Website</dt><dd id="coWebsite">–</dd></div>
+            </dl>
+            <p class="company-summary" id="coSummary"></p>
+            <button class="summary-toggle" id="summaryToggle" hidden>Read more</button>
+          </div>
+        </div>
+
+      </aside>
+    </main>
+  </div>
+
+<script src="static/script.js"></script>
+</body>
+</html>
