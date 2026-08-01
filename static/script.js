@@ -1,7 +1,23 @@
 /* ===================================================================
-   TAPE — ticker dashboard frontend
-   Vanilla JS. Fetches /api/ohlcv, /api/fastinfo, /api/info and renders
-   a hand-rolled canvas line chart + side panels.
+User
+  │
+  ▼
+JavaScript
+  │
+  ▼
+Python API (Flask)
+  │
+  ▼
+Yahoo Finance (yfinance)
+  │
+  ▼
+Python API
+  │
+  ▼
+JavaScript
+  │
+  ▼
+Web Page
    =================================================================== */
 
 (() => {
@@ -337,7 +353,7 @@
     }
   });
 
-  // ------------------------------------------------------------ table -- //
+  // -------------------------------------- OHLCV  table -------- //
 
   function renderTable(){
     ohlcvBody.innerHTML = "";
@@ -382,7 +398,7 @@
     });
   }
 
-  // ------------------------------------------------------ company info -- //
+  // ---------------------------------- company info ------------- //
 
   function renderCompanyInfo(info){
     document.getElementById("coName").textContent = info.longName || "–";
@@ -413,6 +429,7 @@
     summaryToggle.hidden = summary.length < 320;
     summaryToggle.textContent = "Read more";
   }
+
 
   function renderCompanyInfoUnavailable(){
     document.getElementById("coName").textContent = "Company details unavailable";
