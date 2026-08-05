@@ -1,8 +1,3 @@
-/* ===================================================================
-   TAPE — ticker dashboard
-   Palette: deep ink navy panels, teal + amber accents, mono for data.
-   =================================================================== */
-
 :root{
   --bg:          #0E151C;
   --bg-panel:    #151F29;
@@ -528,19 +523,99 @@ a{ color: var(--teal); }
 }
 .summary-toggle:hover{ text-decoration: underline; }
 
-/* -------------------------------------------------------- responsive --- */
+/* ---------------- Desktop / Laptop ---------------- */
 
-@media (max-width: 900px){
-  .app{ padding: 20px 16px 48px; }
-  .layout{ grid-template-columns: 1fr; }
-  .topbar{ align-items: stretch; }
-  .lookup{ width: 100%; }
-  .field-symbol input{ width: 100%; }
-  .lookup{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .field-symbol{ grid-column: 1 / -1; }
-  .btn-load{ grid-column: 1 / -1; }
+@media (min-width: 1200px){
+  .app{
+    padding: 32px 40px 60px;
+  }
+
+  .layout{
+    grid-template-columns: 2fr 1fr;
+  }
 }
 
+
+/* ---------------- iPad / Tablet ---------------- */
+
+@media (max-width: 900px){
+
+  .app{
+    padding: 24px 20px 48px;
+  }
+
+  .layout{
+    grid-template-columns: 1fr;
+  }
+
+  .topbar{
+    align-items: stretch;
+  }
+
+  .lookup{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .field-symbol{
+    grid-column: 1 / -1;
+  }
+
+  .field-symbol input{
+    width: 100%;
+  }
+
+  .btn-load{
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* ---------------- Phones ---------------- */
+
+@media (max-width: 600px){
+
+  .app{
+    padding: 16px 12px 36px;
+  }
+
+  .lookup{
+    grid-template-columns: 1fr;
+  }
+
+  .field-symbol,
+  .btn-load{
+    grid-column: auto;
+  }
+
+  .topbar{
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  h1{
+    font-size: 24px;
+  }
+
+  .card{
+    padding: 16px;
+  }
+
+  button{
+    width: 100%;
+  }
+}
+
+
+/* ---------------- Reduce animations ---------------- */
+
 @media (prefers-reduced-motion: reduce){
-  .brand-dot, .pulse-bars span{ animation: none; }
+
+  .brand-dot,
+  .pulse-bars span{
+    animation: none;
+  }
+
 }

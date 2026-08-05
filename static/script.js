@@ -1,25 +1,3 @@
-/* ===================================================================
-User
-  │
-  ▼
-JavaScript
-  │
-  ▼
-Python API (Flask)
-  │
-  ▼
-Yahoo Finance (yfinance)
-  │
-  ▼
-Python API
-  │
-  ▼
-JavaScript
-  │
-  ▼
-Web Page
-   =================================================================== */
-
 (() => {
   const form        = document.getElementById("lookupForm");
   const symbolInput = document.getElementById("symbol");
